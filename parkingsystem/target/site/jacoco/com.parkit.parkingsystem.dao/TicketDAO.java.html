@@ -86,5 +86,31 @@ import java.sql.Timestamp;
         }
 <span class="nc" id="L87">        return false;</span>
     }
+
+    public int getNbTicket(String vehicleRegNumber){
+<span class="fc" id="L91">        Connection con = null;</span>
+<span class="fc" id="L92">        Ticket ticket = null;</span>
+<span class="fc" id="L93">        int i = 0;</span>
+        try {
+<span class="fc" id="L95">            con = dataBaseConfig.getConnection();</span>
+<span class="fc" id="L96">            PreparedStatement ps = con.prepareStatement(DBConstants.GET_TICKET);</span>
+            //PARKING_NUMBER, ID, PRICE, IN_TIME, OUT_TIME, ParkingType)
+<span class="fc" id="L98">            ps.setString(1,vehicleRegNumber);</span>
+<span class="fc" id="L99">            ResultSet res = ps.executeQuery();</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">            while(res.next()){</span>
+<span class="fc" id="L101">                ticket = this.getTicket(vehicleRegNumber);</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">                if(ticket.getVehicleRegNumber() == vehicleRegNumber){</span>
+<span class="fc" id="L103">                    i++;</span>
+                }
+            }
+<span class="fc" id="L106">            dataBaseConfig.closeResultSet(res);</span>
+<span class="fc" id="L107">            dataBaseConfig.closePreparedStatement(ps);</span>
+<span class="pc" id="L108">        }catch (Exception ex){</span>
+<span class="nc" id="L109">            logger.error(&quot;Error getting number of tickets&quot;,ex);</span>
+        }finally {
+<span class="fc" id="L111">            dataBaseConfig.closeConnection(con);</span>
+        }
+<span class="fc" id="L113">        return i;</span>
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
