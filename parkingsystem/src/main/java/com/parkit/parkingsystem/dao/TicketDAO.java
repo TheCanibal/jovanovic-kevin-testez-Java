@@ -95,6 +95,7 @@ public class TicketDAO {
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_NB_TICKET);
             ps.setString(1,vehicleRegNumber);
             ResultSet res = ps.executeQuery();
+            res.next();
             i = res.getInt("numberOfPasses");
             dataBaseConfig.closeResultSet(res);
             dataBaseConfig.closePreparedStatement(ps);

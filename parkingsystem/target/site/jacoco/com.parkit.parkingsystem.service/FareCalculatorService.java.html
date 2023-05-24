@@ -20,10 +20,10 @@ import com.parkit.parkingsystem.model.Ticket;
             case CAR: {
 <span class="fc bfc" id="L21" title="All 2 branches covered.">                if(duration &lt; 0.5){</span>
 <span class="fc" id="L22">                    ticket.setPrice(0);</span>
-<span class="fc" id="L23">                }</span>
+                }
 <span class="fc bfc" id="L24" title="All 2 branches covered.">                else if(discount == true) {</span>
 <span class="fc" id="L25">                    ticket.setPrice((duration * Fare.CAR_RATE_PER_HOUR) * 0.95);</span>
-<span class="fc" id="L26">                }</span>
+                }
                 else{
 <span class="fc" id="L28">                    ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);</span>
                 }
@@ -32,10 +32,10 @@ import com.parkit.parkingsystem.model.Ticket;
             case BIKE: {
 <span class="fc bfc" id="L33" title="All 2 branches covered.">                if(duration &lt; 0.5){</span>
 <span class="fc" id="L34">                    ticket.setPrice(0);</span>
-<span class="fc" id="L35">                }</span>
+                }
 <span class="fc bfc" id="L36" title="All 2 branches covered.">                else if(discount == true) {</span>
 <span class="fc" id="L37">                    ticket.setPrice((duration * Fare.BIKE_RATE_PER_HOUR) * 0.95);</span>
-<span class="fc" id="L38">                }</span>
+                }
                 else{
 <span class="fc" id="L40">                    ticket.setPrice(duration * Fare.BIKE_RATE_PER_HOUR);</span>
                 }

@@ -34,9 +34,9 @@ import java.sql.Timestamp;
 <span class="fc" id="L34">            return ps.execute();</span>
 <span class="nc" id="L35">        }catch (Exception ex){</span>
 <span class="nc" id="L36">            logger.error(&quot;Error fetching next available slot&quot;,ex);</span>
-<span class="nc" id="L37">        }finally {</span>
-<span class="fc" id="L38">            dataBaseConfig.closeConnection(con);</span>
-<span class="fc" id="L39">            return false;</span>
+        }finally {
+<span class="pc" id="L38">            dataBaseConfig.closeConnection(con);</span>
+<span class="pc" id="L39">            return false;</span>
         }
     }
 
@@ -61,11 +61,11 @@ import java.sql.Timestamp;
             }
 <span class="fc" id="L62">            dataBaseConfig.closeResultSet(rs);</span>
 <span class="fc" id="L63">            dataBaseConfig.closePreparedStatement(ps);</span>
-<span class="pc" id="L64">        }catch (Exception ex){</span>
+<span class="nc" id="L64">        }catch (Exception ex){</span>
 <span class="nc" id="L65">            logger.error(&quot;Error fetching next available slot&quot;,ex);</span>
-<span class="nc" id="L66">        }finally {</span>
-<span class="fc" id="L67">            dataBaseConfig.closeConnection(con);</span>
-<span class="fc" id="L68">            return ticket;</span>
+        }finally {
+<span class="pc" id="L67">            dataBaseConfig.closeConnection(con);</span>
+<span class="pc" id="L68">            return ticket;</span>
         }
     }
 
@@ -89,28 +89,22 @@ import java.sql.Timestamp;
 
     public int getNbTicket(String vehicleRegNumber){
 <span class="fc" id="L91">        Connection con = null;</span>
-<span class="fc" id="L92">        Ticket ticket = null;</span>
-<span class="fc" id="L93">        int i = 0;</span>
+<span class="fc" id="L92">        int i = 0;</span>
         try {
-<span class="fc" id="L95">            con = dataBaseConfig.getConnection();</span>
-<span class="fc" id="L96">            PreparedStatement ps = con.prepareStatement(DBConstants.GET_TICKET);</span>
-            //PARKING_NUMBER, ID, PRICE, IN_TIME, OUT_TIME, ParkingType)
-<span class="fc" id="L98">            ps.setString(1,vehicleRegNumber);</span>
-<span class="fc" id="L99">            ResultSet res = ps.executeQuery();</span>
-<span class="fc bfc" id="L100" title="All 2 branches covered.">            while(res.next()){</span>
-<span class="fc" id="L101">                ticket = this.getTicket(vehicleRegNumber);</span>
-<span class="pc bpc" id="L102" title="1 of 2 branches missed.">                if(ticket.getVehicleRegNumber() == vehicleRegNumber){</span>
-<span class="fc" id="L103">                    i++;</span>
-                }
-            }
-<span class="fc" id="L106">            dataBaseConfig.closeResultSet(res);</span>
-<span class="fc" id="L107">            dataBaseConfig.closePreparedStatement(ps);</span>
-<span class="pc" id="L108">        }catch (Exception ex){</span>
-<span class="nc" id="L109">            logger.error(&quot;Error getting number of tickets&quot;,ex);</span>
+<span class="fc" id="L94">            con = dataBaseConfig.getConnection();</span>
+<span class="fc" id="L95">            PreparedStatement ps = con.prepareStatement(DBConstants.GET_NB_TICKET);</span>
+<span class="fc" id="L96">            ps.setString(1,vehicleRegNumber);</span>
+<span class="fc" id="L97">            ResultSet res = ps.executeQuery();</span>
+<span class="fc" id="L98">            res.next();</span>
+<span class="fc" id="L99">            i = res.getInt(&quot;numberOfPasses&quot;);</span>
+<span class="fc" id="L100">            dataBaseConfig.closeResultSet(res);</span>
+<span class="fc" id="L101">            dataBaseConfig.closePreparedStatement(ps);</span>
+<span class="nc" id="L102">        }catch (Exception ex){</span>
+<span class="nc" id="L103">            logger.error(&quot;Error getting number of tickets&quot;,ex);</span>
         }finally {
-<span class="fc" id="L111">            dataBaseConfig.closeConnection(con);</span>
+<span class="fc" id="L105">            dataBaseConfig.closeConnection(con);</span>
         }
-<span class="fc" id="L113">        return i;</span>
+<span class="fc" id="L107">        return i;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
