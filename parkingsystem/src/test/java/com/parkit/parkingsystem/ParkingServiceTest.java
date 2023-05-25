@@ -1,5 +1,7 @@
 package com.parkit.parkingsystem;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
@@ -54,8 +56,18 @@ public class ParkingServiceTest {
 
     @Test
     public void processExitingVehicleTest(){
+        when(ticketDAO.getNbTicket("ABCDEF")).thenReturn(2);
+	
         parkingService.processExitingVehicle();
+        Ticket ticket = ticketDAO.getTicket("ABCDEF");
+        
+        
+        verify(ticketDAO).getNbTicket("ABCDEF");
         verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
+        assertThat(ticket.getParkingSpot().isAvailable()).isEqualTo(true);
+        System.out.println(ticket.getPrice());
+        assertEquals(ticket.getPrice(), 1.425, 0.00001);
+
     }
 
 }
