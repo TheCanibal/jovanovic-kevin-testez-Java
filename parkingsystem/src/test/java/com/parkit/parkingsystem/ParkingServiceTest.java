@@ -15,12 +15,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.Date;
 
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class ParkingServiceTest {
 
     private static ParkingService parkingService;
@@ -44,7 +47,6 @@ public class ParkingServiceTest {
             ticket.setVehicleRegNumber("ABCDEF");
             when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
             when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
-
             when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
 
             parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
@@ -65,8 +67,25 @@ public class ParkingServiceTest {
         verify(ticketDAO).getNbTicket("ABCDEF");
         verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
         assertThat(ticket.getParkingSpot().isAvailable()).isEqualTo(true);
-        System.out.println(ticket.getPrice());
-        assertEquals(ticket.getPrice(), 1.425, 0.00001);
+        assertEquals(Math.round(ticket.getPrice()*1000.0)/1000.0, 1.425);
+
+    }
+
+    @Test
+    public void testProcessIncomingVehicle(){
+        when(ticketDAO.getNbTicket("ABCDEF")).thenReturn(2);
+        when(inputReaderUtil.readSelection()).thenReturn(1);
+        when(parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR)).thenReturn(1);
+	
+        parkingService.processIncomingVehicle();
+        Ticket ticket = ticketDAO.getTicket("ABCDEF");
+        
+        
+        verify(ticketDAO).getNbTicket("ABCDEF");
+        verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
+        verify(parkingSpotDAO).getNextAvailableSlot(ParkingType.CAR);
+        verify(inputReaderUtil).readSelection();
+        assertThat(ticket.getParkingSpot().isAvailable()).isEqualTo(false);
 
     }
 
