@@ -133,6 +133,21 @@ public class ParkingServiceTest {
 
     }
 
-    
+    @Test
+    public void testGetNextParkingNumberIfAvailableParkingNumberWrongArgument(){
+        //when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
+        when(inputReaderUtil.readSelection()).thenReturn(3);
+	
+        //assertThrows(IllegalArgumentException.class, () -> parkingService.getNextParkingNumberIfAvailable());
+        ParkingSpot parkingSpot = parkingService.getNextParkingNumberIfAvailable();
+        
+        //verify(parkingSpotDAO).getNextAvailableSlot(any(ParkingType.class));
+        verify(inputReaderUtil).readSelection();
+
+        assertThat(parkingSpot).isEqualTo(null);
+
+    }
+
+
 
 }

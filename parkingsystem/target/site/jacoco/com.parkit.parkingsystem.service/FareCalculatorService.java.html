@@ -14,7 +14,7 @@ import com.parkit.parkingsystem.model.Ticket;
 <span class="fc" id="L14">        long outHour = ticket.getOutTime().getTime();</span>
 
         //TODO: Some tests are failing here. Need to check if this logic is correct
-<span class="fc" id="L17">        float duration = (outHour - inHour)/3600000f;</span>
+<span class="fc" id="L17">        double duration = (outHour - inHour)/3600000.0;</span>
 
 <span class="pc bpc" id="L19" title="1 of 3 branches missed.">        switch (ticket.getParkingSpot().getParkingType()){</span>
             case CAR: {
