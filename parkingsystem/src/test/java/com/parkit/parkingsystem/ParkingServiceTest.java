@@ -1,7 +1,7 @@
 package com.parkit.parkingsystem;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
@@ -9,7 +9,7 @@ import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -56,6 +56,11 @@ public class ParkingServiceTest {
         }
     }
 
+    @AfterEach
+    private void nextTest() {
+        System.out.println("\nTEST SUIVANT\n");
+    }
+
     @Test
     public void processExitingVehicleTest(){
         when(ticketDAO.getNbTicket("ABCDEF")).thenReturn(2);
@@ -86,6 +91,31 @@ public class ParkingServiceTest {
         verify(parkingSpotDAO).getNextAvailableSlot(ParkingType.CAR);
         verify(inputReaderUtil).readSelection();
         assertThat(ticket.getParkingSpot().isAvailable()).isEqualTo(false);
+
+    }
+
+    @Test
+    public void processExitingVehicleTestUnableUpdate(){
+        when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(false);
+	
+        parkingService.processExitingVehicle();
+        
+        verify(ticketDAO).updateTicket(any(Ticket.class));
+
+    }
+
+    @Test
+    public void testGetNextParkingNumberIfAvailable(){
+        when(parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR)).thenReturn(1);
+        when(inputReaderUtil.readSelection()).thenReturn(1);
+	
+        ParkingSpot parkingSpot = parkingService.getNextParkingNumberIfAvailable();
+        
+        verify(parkingSpotDAO).getNextAvailableSlot(ParkingType.CAR);
+        verify(inputReaderUtil).readSelection();
+        assertThat(parkingSpot.getId()).isEqualTo(1);
+        assertThat(parkingSpot.isAvailable()).isEqualTo(true);
+    
 
     }
 
