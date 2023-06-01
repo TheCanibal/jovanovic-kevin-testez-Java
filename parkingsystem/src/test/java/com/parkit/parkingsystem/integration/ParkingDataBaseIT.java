@@ -1,5 +1,7 @@
 package com.parkit.parkingsystem.integration;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
@@ -51,7 +53,12 @@ public class ParkingDataBaseIT {
     public void testParkingACar(){
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processIncomingVehicle();
+
         //TODO: check that a ticket is actualy saved in DB and Parking table is updated with availability
+        assertThat(ticketDAO.getTicket("ABCDEF")).isNotNull();
+        assertThat(ticketDAO.getTicket("ABCDEF").getParkingSpot().isAvailable()).isEqualTo(false);
+        assertThat(parkingSpotDAO.updateParking(ticketDAO.getTicket("ABCDEF").getParkingSpot())).isEqualTo(true);
+
     }
 
     @Test
@@ -60,6 +67,10 @@ public class ParkingDataBaseIT {
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
         parkingService.processExitingVehicle();
         //TODO: check that the fare generated and out time are populated correctly in the database
+
+        assertThat(ticketDAO.getTicket("ABCDEF").getOutTime()).isNotNull();
+        //L'heure d'entrée et de sortie sont quasi les mêmes car on a pas initialisé de délai donc le prix est de 0
+        assertThat(ticketDAO.getTicket("ABCDEF").getPrice()).isEqualTo(0);
     }
 
 }

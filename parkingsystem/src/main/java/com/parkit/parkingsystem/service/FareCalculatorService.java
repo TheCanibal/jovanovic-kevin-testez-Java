@@ -14,35 +14,34 @@ public class FareCalculatorService {
         long outHour = ticket.getOutTime().getTime();
 
         //TODO: Some tests are failing here. Need to check if this logic is correct
-        double duration = (outHour - inHour)/3600000.0;
+        double duration = Math.floor(((outHour - inHour)/3600000.0)*1000.0)/1000.0;
 
-        switch (ticket.getParkingSpot().getParkingType()){
-            case CAR: {
-                if(duration < 0.5){
+            if(duration < 0.5){
                     ticket.setPrice(0);
-                }
-                else if(discount == true) {
-                    ticket.setPrice((duration * Fare.CAR_RATE_PER_HOUR) * 0.95);
-                }
-                else{
+            }
+            else {
+            
+            switch (ticket.getParkingSpot().getParkingType()){
+            case CAR: {
+
                     ticket.setPrice(duration * Fare.CAR_RATE_PER_HOUR);
-                }
+                
                 break;
             }
             case BIKE: {
-                if(duration < 0.5){
-                    ticket.setPrice(0);
-                }
-                else if(discount == true) {
-                    ticket.setPrice((duration * Fare.BIKE_RATE_PER_HOUR) * 0.95);
-                }
-                else{
+                
                     ticket.setPrice(duration * Fare.BIKE_RATE_PER_HOUR);
-                }
+
                 break;
             }
             default: throw new IllegalArgumentException("Unkown Parking Type");
         }
+
+        }
+
+        if(discount == true) {
+                    ticket.setPrice(ticket.getPrice() * 95 / 100);
+                }
     }
 
     public void calculateFare(Ticket ticket) {

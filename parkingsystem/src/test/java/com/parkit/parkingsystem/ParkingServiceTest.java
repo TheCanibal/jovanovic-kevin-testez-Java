@@ -72,7 +72,8 @@ public class ParkingServiceTest {
         verify(ticketDAO).getNbTicket("ABCDEF");
         verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
         assertThat(ticket.getParkingSpot().isAvailable()).isEqualTo(true);
-        assertEquals(Math.round(ticket.getPrice()*1000.0)/1000.0, 1.425);
+        assertEquals(ticket.getPrice(), 1.425);
+        System.out.println(ticket.getPrice());
 
     }
 
@@ -129,7 +130,7 @@ public class ParkingServiceTest {
         verify(parkingSpotDAO).getNextAvailableSlot(any(ParkingType.class));
         verify(inputReaderUtil).readSelection();
 
-        assertThat(parkingSpot).isEqualTo(null);
+        assertThat(parkingSpot).isNull();
 
     }
 
