@@ -14,7 +14,8 @@ public class FareCalculatorService {
         long outHour = ticket.getOutTime().getTime();
 
         //TODO: Some tests are failing here. Need to check if this logic is correct
-        double duration = Math.floor(((outHour - inHour)/3600000.0)*1000.0)/1000.0;
+        double duration = Math.round(((outHour - inHour)/3600000.0)*1000.0)/1000.0;
+        System.out.println(duration +"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
             if(duration < 0.5){
                     ticket.setPrice(0);
